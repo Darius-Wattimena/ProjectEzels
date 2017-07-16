@@ -7,37 +7,48 @@
 #include "CustomException.h"
 
 SDL_Event ev;
+SDL_Texture* map;
 MainWindow mw;
 Player player = nullptr;
+int frame = 0;
 
 Game::Game(MainWindow mainWindow)
 {
 	mw = mainWindow;
-	int frame = 0;
-	int FPS = 60;
 
 	player = Player(this);
 	player.loadPlayerTexture("res/player.png");
 
+	map = loadTexture("res/map.png");
+
 	while (mw.isRunning()) {
+
+		frame++;
 
 		while (SDL_PollEvent(&ev) != 0) {
 			handleEvent();
 		}
 
-		frame++;
-
-		if (FPS / frame == 4) {
-			frame = 0;
-			player.playerRect.x += player.frameWidth;
-
-			if (player.playerRect.x >= player.textureWidth) {
-				player.playerRect.x = 0;
+		if (player.motionUsed != 1) {
+			switch (player.currentWalkSide) {
+			case Player::UP:
+				player.moveUp(frame);
+				break;
+			case Player::DOWN:
+				player.moveDown(frame);
+				break;
+			case Player::LEFT:
+				player.moveLeft(frame);
+				break;
+			case Player::RIGHT:
+				player.moveRight(frame);
+				break;
 			}
 		}
 
 		SDL_RenderClear(mw.renderer);
-		SDL_RenderCopy(mw.renderer, player.playerTexture, &player.playerRect, NULL);
+		SDL_RenderCopy(mw.renderer, map, NULL, NULL);
+		SDL_RenderCopy(mw.renderer, player.playerTexture, &player.playerRect, &player.playerPosition);
 		SDL_RenderPresent(mw.renderer);
 	}
 }
@@ -76,6 +87,7 @@ SDL_Texture * Game::loadTexture(std::string filePath)
 void Game::handleEvent()
 {
 	if (ev.type == SDL_QUIT) {
+		player.clearPlayer();
 		mw.stopRunning();
 		mw.close();
 	}
@@ -86,21 +98,12 @@ void Game::handleEvent()
 
 void Game::handleKeyEvent()
 {
-	switch (ev.key.keysym.sym)
-	{
-	case SDLK_w:
-		player.playerRect.y = player.frameHeight * 3;
-		break;
-	case SDLK_s:
-		player.playerRect.y = 0;
-		break;
-	case SDLK_a:
-		player.playerRect.y = player.frameHeight * 1;
-		break;
-	case SDLK_d:
-		player.playerRect.y = player.frameHeight * 2;
-		break;
-	default:
-		break;
+	if (player.motionUsed == 1) {
+		player.handlePlayerKeyEvent(ev, frame);
 	}
+}
+
+void Game::resetFrame()
+{
+	frame = 0;
 }

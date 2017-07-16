@@ -10,4 +10,5 @@ public:
 	SDL_Texture *loadTexture(std::string filePath);
 	void handleEvent();
 	void handleKeyEvent();
+	void resetFrame();
 };

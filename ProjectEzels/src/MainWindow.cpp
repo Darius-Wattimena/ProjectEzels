@@ -45,7 +45,7 @@ void MainWindow::close()
 
 void MainWindow::createWindow()
 {
-	window = SDL_CreateWindow("Project Ezel", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Project Ezel", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_SHOWN);
 
 	if (window == NULL) {
 		throw CustomException(_CRT_WIDE(__FILE__), __LINE__, L"Error creating the window");
