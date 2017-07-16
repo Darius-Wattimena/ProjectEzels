@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MainWindow.h"
+#include "CustomException.h"
 #include <iostream>
 
 class Game {

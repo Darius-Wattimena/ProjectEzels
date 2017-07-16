@@ -5,7 +5,7 @@
 
 int main(int argc, char *args[]) {
 
-	bool running;
+	bool running = false;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		std::cout << "Initialization Error : " << SDL_GetError() << std::endl;

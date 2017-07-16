@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game.h"
+#include "Map.h"
 
 class Player {
 public:
@@ -15,7 +16,7 @@ public:
 
 	void clearPlayer();
 	void loadPlayerTexture(std::string filePath);
-	void handlePlayerKeyDownEvent(SDL_Event ev, int frame);
+	void handlePlayerKeyDownEvent(SDL_Event ev, int frame, Map map);
 	void handlePlayerKeyUpEvent(SDL_Event ev);
 	void updatePlayerTexture(int frame);
 	void changeWalkDirection(WALK_SIDE walkSide, int playerTextureY);
@@ -23,10 +24,10 @@ public:
 	void startRunning();
 	void stopRunning();
 
-	void moveUp(int frame);
-	void moveDown(int frame);
-	void moveLeft(int frame);
-	void moveRight(int frame);
+	void moveUp(int frame, Map map);
+	void moveDown(int frame, Map map);
+	void moveLeft(int frame, Map map);
+	void moveRight(int frame, Map map);
 
 	int textureWidth;
 	int textureHeight;

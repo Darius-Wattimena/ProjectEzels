@@ -2,14 +2,15 @@
 #include "SDL_image.h"
 
 #include "Game.h"
-#include "MainWindow.h"
+#include "Map.h"
 #include "Player.h"
-#include "CustomException.h"
+
 
 SDL_Event ev;
-SDL_Texture* map;
 MainWindow mw;
 Player player = nullptr;
+Map map = nullptr;
+
 int frame = 0;
 
 Game::Game(MainWindow mainWindow)
@@ -19,7 +20,8 @@ Game::Game(MainWindow mainWindow)
 	player = Player(this);
 	player.loadPlayerTexture("res/player.png");
 
-	map = loadTexture("res/map.png");
+	map = Map(this);
+	map.loadMapTexture("res/map.png");
 
 	while (mw.isRunning()) {
 
@@ -32,22 +34,22 @@ Game::Game(MainWindow mainWindow)
 		if (player.motionUsed != 1) {
 			switch (player.currentWalkSide) {
 			case Player::UP:
-				player.moveUp(frame);
+				player.moveUp(frame, map);
 				break;
 			case Player::DOWN:
-				player.moveDown(frame);
+				player.moveDown(frame, map);
 				break;
 			case Player::LEFT:
-				player.moveLeft(frame);
+				player.moveLeft(frame, map);
 				break;
 			case Player::RIGHT:
-				player.moveRight(frame);
+				player.moveRight(frame, map);
 				break;
 			}
 		}
 
 		SDL_RenderClear(mw.renderer);
-		SDL_RenderCopy(mw.renderer, map, NULL, NULL);
+		SDL_RenderCopy(mw.renderer, map.mapTexture, NULL, NULL);
 		SDL_RenderCopy(mw.renderer, player.playerTexture, &player.playerRect, &player.playerPosition);
 		SDL_RenderPresent(mw.renderer);
 	}
@@ -102,7 +104,7 @@ void Game::handleEvent()
 void Game::handleKeyEvent()
 {
 	if (player.motionUsed == 1) {
-		player.handlePlayerKeyDownEvent(ev, frame);
+		player.handlePlayerKeyDownEvent(ev, frame, map);
 	}
 }
 

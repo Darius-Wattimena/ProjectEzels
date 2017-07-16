@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Game* g;
+Game* playerGame;
 int playerWY;
 int playerSY;
 int playerDY;
@@ -8,7 +8,7 @@ int playerAY;
 
 Player::Player(Game* game)
 {
-	g = game;
+	playerGame = game;
 }
 
 void Player::clearPlayer()
@@ -18,7 +18,7 @@ void Player::clearPlayer()
 
 void Player::loadPlayerTexture(std::string filePath)
 {
-	playerTexture = g->loadTexture(filePath);
+	playerTexture = playerGame->loadTexture(filePath);
 
 	SDL_QueryTexture(playerTexture, NULL, NULL, &textureWidth, &textureHeight);
 
@@ -43,7 +43,7 @@ void Player::loadPlayerTexture(std::string filePath)
 	running = false;
 }
 
-void Player::handlePlayerKeyDownEvent(SDL_Event ev, int frame)
+void Player::handlePlayerKeyDownEvent(SDL_Event ev, int frame, Map map)
 {
 	switch (ev.key.keysym.sym)
 	{
@@ -52,19 +52,19 @@ void Player::handlePlayerKeyDownEvent(SDL_Event ev, int frame)
 		break;
 	case SDLK_w:
 		changeWalkDirection(UP, playerWY);
-		moveUp(frame);
+		moveUp(frame, map);
 		break;
 	case SDLK_s:
 		changeWalkDirection(DOWN, playerSY);
-		moveDown(frame);
+		moveDown(frame, map);
 		break;
 	case SDLK_a:
 		changeWalkDirection(LEFT, playerAY);
-		moveLeft(frame);
+		moveLeft(frame, map);
 		break;
 	case SDLK_d:
 		changeWalkDirection(RIGHT, playerDY);
-		moveRight(frame);
+		moveRight(frame, map);
 		break;
 	}
 }
@@ -83,7 +83,7 @@ void Player::updatePlayerTexture(int frame)
 {
 	if (running) {
 		if (frame > 7) {
-			g->resetFrame();
+			playerGame->resetFrame();
 
 			playerRect.x += frameWidth;
 
@@ -100,7 +100,7 @@ void Player::updatePlayerTexture(int frame)
 	}
 	else {
 		if (frame > 15) {
-			g->resetFrame();
+			playerGame->resetFrame();
 
 			playerRect.x += frameWidth;
 
@@ -133,47 +133,70 @@ void Player::stopRunning()
 	running = false;
 }
 
-void Player::moveUp(int frame)
+void Player::moveUp(int frame, Map map)
 {
-	if (running) {
-		playerPosition.y -= 2;
+	if (!playerPosition.y <= 0) {
+		if (running) {
+			playerPosition.y -= 2;
+		}
+		else {
+			playerPosition.y -= 1;
+		}
+		updatePlayerTexture(frame);
 	}
-	else {
-		playerPosition.y -= 1;
+	else
+	{
+		motionUsed = 1;
 	}
-	updatePlayerTexture(frame);
-	
 }
 
-void Player::moveDown(int frame)
+void Player::moveDown(int frame, Map map)
 {
-	if (running) {
-		playerPosition.y += 2;
+	if (playerPosition.y < map.mapHeight) {
+		if (running) {
+			playerPosition.y += 2;
+		}
+		else {
+			playerPosition.y += 1;
+		}
+		updatePlayerTexture(frame);
 	}
-	else {
-		playerPosition.y += 1;
+	else
+	{
+		motionUsed = 1;
 	}
-	updatePlayerTexture(frame);
 }
 
-void Player::moveLeft(int frame)
+void Player::moveLeft(int frame, Map map)
 {
-	if (running) {
-		playerPosition.x -= 2;
+	if (!playerPosition.x <= 0) {
+		if (running) {
+			playerPosition.x -= 2;
+		}
+		else {
+			playerPosition.x -= 1;
+		}
+		updatePlayerTexture(frame);
 	}
-	else {
-		playerPosition.x -= 1;
+	else 
+	{
+		motionUsed = 1;
 	}
-	updatePlayerTexture(frame);
 }
 
-void Player::moveRight(int frame)
+void Player::moveRight(int frame, Map map)
 {
-	if (running) {
-		playerPosition.x += 2;
+	if (playerPosition.x < map.mapWidth) {
+		if (running) {
+			playerPosition.x += 2;
+		}
+		else {
+			playerPosition.x += 1;
+		}
+		updatePlayerTexture(frame);
 	}
-	else {
-		playerPosition.x += 1;
+	else
+	{
+		motionUsed = 1;
 	}
-	updatePlayerTexture(frame);
 }
