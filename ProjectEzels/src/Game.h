@@ -1,9 +1,13 @@
 #pragma once
 
 #include "MainWindow.h"
+#include <iostream>
 
 class Game {
 public:
 	Game::Game(MainWindow mainWindow);
-	void handleEvent(SDL_Event sdlEvent);
+	SDL_Surface *loadSurface(std::string filePath);
+	SDL_Texture *loadTexture(std::string filePath);
+	void handleEvent();
+	void handleKeyEvent();
 };

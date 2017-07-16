@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SDL.h"
+
 class MainWindow {
 public:
 	SDL_Window *window = nullptr;

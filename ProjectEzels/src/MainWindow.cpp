@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
+
 #include "SDL.h"
+#include "SDL_image.h"
+
 #include "MainWindow.h"
 #include "CustomException.h"
 
@@ -31,7 +34,12 @@ void MainWindow::stopRunning()
 
 void MainWindow::close()
 {
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+
+	renderer = nullptr;
+	window = nullptr;
+
 	SDL_Quit();
 }
 
@@ -48,7 +56,7 @@ void MainWindow::createWindow()
 
 void MainWindow::createRenderer()
 {
-	renderer = SDL_CreateRenderer(window, -1, 0);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	if (renderer == NULL) {
 		throw CustomException(_CRT_WIDE(__FILE__), __LINE__, L"Error creating the renderer");
