@@ -39,12 +39,17 @@ void Player::loadPlayerTexture(std::string filePath)
 	playerSY = 0;
 	playerDY = frameHeight * 2;
 	playerAY = frameHeight * 1;
+
+	running = false;
 }
 
-void Player::handlePlayerKeyEvent(SDL_Event ev, int frame)
+void Player::handlePlayerKeyDownEvent(SDL_Event ev, int frame)
 {
 	switch (ev.key.keysym.sym)
 	{
+	case SDLK_LSHIFT:
+		startRunning();
+		break;
 	case SDLK_w:
 		changeWalkDirection(UP, playerWY);
 		moveUp(frame);
@@ -64,21 +69,50 @@ void Player::handlePlayerKeyEvent(SDL_Event ev, int frame)
 	}
 }
 
+void Player::handlePlayerKeyUpEvent(SDL_Event ev)
+{
+	switch (ev.key.keysym.sym)
+	{
+	case SDLK_LSHIFT:
+		stopRunning();
+		break;
+	}
+}
+
 void Player::updatePlayerTexture(int frame)
 {
-	if (frame > 15) {
-		g->resetFrame();
+	if (running) {
+		if (frame > 7) {
+			g->resetFrame();
 
-		playerRect.x += frameWidth;
+			playerRect.x += frameWidth;
 
-		if (playerRect.x >= textureWidth) {
-			playerRect.x = 0;
+			if (playerRect.x >= textureWidth) {
+				playerRect.x = 0;
+			}
+
+			motionUsed++;
+
+			if (motionUsed >= 4) {
+				motionUsed = 1;
+			}
 		}
+	}
+	else {
+		if (frame > 15) {
+			g->resetFrame();
 
-		motionUsed++;
+			playerRect.x += frameWidth;
 
-		if (motionUsed >= 4) {
-			motionUsed = 1;
+			if (playerRect.x >= textureWidth) {
+				playerRect.x = 0;
+			}
+
+			motionUsed++;
+
+			if (motionUsed >= 4) {
+				motionUsed = 1;
+			}
 		}
 	}
 }
@@ -89,27 +123,57 @@ void Player::changeWalkDirection(WALK_SIDE walkSide, int playerTextureY)
 	playerRect.y = playerTextureY;
 }
 
+void Player::startRunning()
+{
+	running = true;
+}
+
+void Player::stopRunning()
+{
+	running = false;
+}
+
 void Player::moveUp(int frame)
 {
-	playerPosition.y -= 1;
+	if (running) {
+		playerPosition.y -= 2;
+	}
+	else {
+		playerPosition.y -= 1;
+	}
 	updatePlayerTexture(frame);
 	
 }
 
 void Player::moveDown(int frame)
 {
-	playerPosition.y += 1;
+	if (running) {
+		playerPosition.y += 2;
+	}
+	else {
+		playerPosition.y += 1;
+	}
 	updatePlayerTexture(frame);
 }
 
 void Player::moveLeft(int frame)
 {
-	playerPosition.x -= 1;
+	if (running) {
+		playerPosition.x -= 2;
+	}
+	else {
+		playerPosition.x -= 1;
+	}
 	updatePlayerTexture(frame);
 }
 
 void Player::moveRight(int frame)
 {
-	playerPosition.x += 1;
+	if (running) {
+		playerPosition.x += 2;
+	}
+	else {
+		playerPosition.x += 1;
+	}
 	updatePlayerTexture(frame);
 }

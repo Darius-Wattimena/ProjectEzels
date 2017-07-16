@@ -94,12 +94,15 @@ void Game::handleEvent()
 	else if (ev.type == SDL_KEYDOWN) {
 		handleKeyEvent();
 	}
+	else if (ev.type == SDL_KEYUP) {
+		player.handlePlayerKeyUpEvent(ev);
+	}
 }
 
 void Game::handleKeyEvent()
 {
 	if (player.motionUsed == 1) {
-		player.handlePlayerKeyEvent(ev, frame);
+		player.handlePlayerKeyDownEvent(ev, frame);
 	}
 }
 
