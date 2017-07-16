@@ -30,8 +30,8 @@ void Player::loadPlayerTexture(std::string filePath)
 	playerRect.w = frameWidth;
 	playerRect.h = frameHeight;
 
-	playerPosition.x = 0;
-	playerPosition.y = 0;
+	playerPosition.x = 512;
+	playerPosition.y = 384;
 	playerPosition.w = frameWidth;
 	playerPosition.h = frameHeight;
 
@@ -46,15 +46,19 @@ void Player::handlePlayerKeyEvent(SDL_Event ev, int frame)
 	switch (ev.key.keysym.sym)
 	{
 	case SDLK_w:
+		changeWalkDirection(UP, playerWY);
 		moveUp(frame);
 		break;
 	case SDLK_s:
+		changeWalkDirection(DOWN, playerSY);
 		moveDown(frame);
 		break;
 	case SDLK_a:
+		changeWalkDirection(LEFT, playerAY);
 		moveLeft(frame);
 		break;
 	case SDLK_d:
+		changeWalkDirection(RIGHT, playerDY);
 		moveRight(frame);
 		break;
 	}
@@ -79,10 +83,14 @@ void Player::updatePlayerTexture(int frame)
 	}
 }
 
+void Player::changeWalkDirection(WALK_SIDE walkSide, int playerTextureY)
+{
+	currentWalkSide = walkSide;
+	playerRect.y = playerTextureY;
+}
+
 void Player::moveUp(int frame)
 {
-	currentWalkSide = UP;
-	playerRect.y = playerWY;
 	playerPosition.y -= 1;
 	updatePlayerTexture(frame);
 	
@@ -90,24 +98,18 @@ void Player::moveUp(int frame)
 
 void Player::moveDown(int frame)
 {
-	currentWalkSide = DOWN;
-	playerRect.y = playerSY;
 	playerPosition.y += 1;
 	updatePlayerTexture(frame);
 }
 
 void Player::moveLeft(int frame)
 {
-	currentWalkSide = LEFT;
-	playerRect.y = playerAY;
 	playerPosition.x -= 1;
 	updatePlayerTexture(frame);
 }
 
 void Player::moveRight(int frame)
 {
-	currentWalkSide = RIGHT;
-	playerRect.y = playerDY;
 	playerPosition.x += 1;
 	updatePlayerTexture(frame);
 }

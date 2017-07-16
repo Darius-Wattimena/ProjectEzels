@@ -16,6 +16,7 @@ public:
 	void loadPlayerTexture(std::string filePath);
 	void handlePlayerKeyEvent(SDL_Event ev, int frame);
 	void updatePlayerTexture(int frame);
+	void changeWalkDirection(WALK_SIDE walkSide, int playerTextureY);
 	void moveUp(int frame);
 	void moveDown(int frame);
 	void moveLeft(int frame);
